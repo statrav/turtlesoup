@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: turtlesoup-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/db:/app/db
+      - ./data:/app/data  # 문제 jsonl 공유
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: turtlesoup-frontend
+    ports:
+      - "8080:80"
