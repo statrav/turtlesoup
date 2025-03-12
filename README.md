@@ -30,8 +30,9 @@ AI의 예/아니오 응답만으로는 부족하다고 느낄 때, **'힌트 보
 - AI에게 예/아니오 질문을 통해 단서를 얻고, 정답에 다가가는 방식입니다.
 - 정답 유추가 어려울 땐 **힌트 보기**, **포기하고 답 보기**, **정답 제출하기** 기능도 제공합니다.
 
+데모 영상 링크 : [https://youtube.com/shorts/QMAcLYRxWgI?feature=share](https://youtube.com/shorts/QMAcLYRxWgI?feature=share)
 ![실제 실행 화면](./화면.png)
-![데모 영상](https://youtube.com/shorts/QMAcLYRxWgI?feature=share)
+
 
 ## 🧠 주요 기능
 
