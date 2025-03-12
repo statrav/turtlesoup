@@ -2,31 +2,230 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>TurtleSoup AI</title>
+    <title>🐢 바다거북 스프 게임</title>
+    <style>
+
+        #intro-section {
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 40px;
+            padding: 30px;
+            background-color: #e8f0ff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        #intro-section p {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #333;
+            margin-bottom: 20px;
+        }
+            
+        .modal {
+          position: fixed;
+          z-index: 1000;
+          left: 0; top: 0;
+          width: 100%; height: 100%;
+          background-color: rgba(0, 0, 0, 0.6);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        
+        .modal-content {
+          background: white;
+          padding: 30px;
+          border-radius: 10px;
+          width: 600px;
+          max-height: 80vh;
+          overflow-y: auto;
+          box-shadow: 0 0 20px rgba(0,0,0,0.2);
+          animation: fadeIn 0.4s ease;
+        }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; transform: scale(0.9); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        
+        .close {
+          float: right;
+          font-size: 28px;
+          cursor: pointer;
+          margin-top: -10px;
+          margin-right: -10px;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f8;
+        }
+
+        h1 {
+            text-align: center;
+            background-color: #afec60ce;
+            color: white;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        select {
+            padding: 5px 10px;
+            margin-right: 15px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px;
+            margin-bottom: 8px;
+            background-color: #a6e15d4e;
+            border-left: 4px solid #a6e15d7e;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        li:hover {
+            background-color: #bbb7b784;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            padding: 10px 16px;
+            margin-right: 10px;
+            background-color: #a6e15d7e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #a6e15d7e;
+        }
+
+        #loading-msg {
+            font-style: italic;
+            color: gray;
+            margin-top: 10px;
+        }
+
+        #response {
+            margin-top: 15px;
+            white-space: pre-line;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>🐢 바다거북 스프 게임</h1>
 
-    <div id="problem-list">
-        <h2>문제 리스트</h2>
-        <p id="loading-msg">로딩 중입니다...</p>
-        <ul id="problems"></ul>
+    <h1><a href="#" onclick="goHome()" style="color: white; text-decoration: none;">🐢 바다거북 스프 게임</a></h1>
+
+    <div class="container" id="intro-section">
+        <h2>🐢 바다거북 스프 게임이란?</h2>
+        <p>
+            바다거북 스프는 <strong>정답을 유추해가는 추리 퀴즈 게임</strong>입니다! 🕵️‍♀️<br><br>
+            
+            간단한 상황만 주어질테니, 여러분은 저에게 자유롭게 질문을 하며<br>
+            정답을 간접적으로 추론해야 합니다.<br><br>
+        
+            🤔 <strong>여러 번 질문</strong>하며 반응을 살펴보세요.<br>
+            저는 질문이 정답 유도에 도움이 되는지 <em>예/아니오/무관함</em>으로 알려줍니다.<br><br>
+        
+            💡 <strong>힌트 보기</strong> 버튼을 누르면 질문이 정답에 어떤 영향을 주는지 <em>추론 설명</em>도 확인할 수 있어요!<br><br>
+        
+            🎯 정답을 알겠다면 <strong>정답 제출</strong>!<br>
+            🙈 너무 어려우면 <strong>포기하기(정답 확인)</strong>로 정답을 확인할 수 있어요.<br><br>
+        
+            다양한 카테고리와 난이도로 구성되어 있어<br>
+            누구나 즐겁게 즐길 수 있습니다 😊<br><br>
+
+            자 그럼 함께 즐겨볼까요?
+        </p>
+        <button onclick="startGame()">게임 하러 가기 🎮</button>
     </div>
+    
+    <div class="container">
+        <div class="section" id="filter-section" style="display: none;">
+            <h2>문제 필터</h2>
+            <label for="category-select">카테고리:</label>
+            <select id="category-select" onchange="filterProblems()">
+                <option value="">전체</option>
+                <option value="일상">일상</option>
+                <option value="추리">추리</option>
+                <option value="감성">감성</option>
+                <option value="공포">공포</option>
+            </select>
 
-    <div id="question-section" style="display:none;">
-        <h2 id="problem-title"></h2>
-        <p id="problem-description"></p>
-        <input type="text" id="user-question" placeholder="질문을 입력하세요">
-        <button onclick="submitQuestion()">질문하기</button>
-        <p id="response"></p>
-        <input type="text" id="final-answer" placeholder="정답을 입력해보세요">
-        <button onclick="submitFinalAnswer()">정답 제출</button>
-        <button onclick="giveUp()">포기하기</button>
+            <label for="difficulty-select">난이도:</label>
+            <select id="difficulty-select" onchange="filterProblems()">
+                <option value="">전체</option>
+                <option value="하">하</option>
+                <option value="중">중</option>
+                <option value="상">상</option>
+            </select>
+        </div>
+
+        <div class="section" id="problem-list" style="display: none;">
+            <h2>문제 리스트</h2>
+            <p id="loading-msg">📦 문제 목록을 불러오는 중입니다...</p>
+            <ul id="problems"></ul>
+        </div>
+
+        <!-- 문제 모달 -->
+        <div id="problem-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3 id="modal-problem-title"></h3>
+            <p id="modal-problem-description"></p>
+            <div id="modal-question-section">
+                <input type="text" id="modal-user-question" placeholder="질문을 입력하세요">
+                <button onclick="submitModalQuestion()">질문하기</button>
+                <button onclick="showHint()">힌트 보기</button> <!-- ✅ 추가 -->
+            </div>
+            <div id="modal-history"></div>
+            <br>
+            <input type="text" id="modal-final-answer" placeholder="정답을 입력해보세요">
+            <button onclick="submitFinalAnswer()">정답 제출</button>
+            <button onclick="giveUp()">포기하기(정답 확인)</button>
+            <p id="modal-response"></p>
+            </div>
+        </div>
     </div>
 
     <script src="js/app.js"></script>
-
-
-
 </body>
 </html>

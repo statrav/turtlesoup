@@ -4,8 +4,8 @@ from pydantic import BaseModel
 import sqlite3
 from datetime import datetime
 
-# model_handler import (상대경로 or 절대경로 상황에 따라 조정)
-from models.model_handler import get_response_from_model
+# model_handler import
+from models.model_handler import get_response_from_model, explain_reasoning, judge_final_answer
 
 app = FastAPI()
 
@@ -24,6 +24,10 @@ class QuestionRequest(BaseModel):
     user_id: str
     question: str
 
+class HintRequest(BaseModel):
+    problem_id: int
+    user_id: str
+    question: str
 
 # ✅ 문제 리스트 전체 조회
 @app.get("/problems")
@@ -108,18 +112,35 @@ class FinalAnswerRequest(BaseModel):
 def submit_answer(data: FinalAnswerRequest):
     conn = sqlite3.connect("db/ai_turtle.db")
     cursor = conn.cursor()
-    cursor.execute("SELECT answer FROM problems WHERE id = ?", (data.problem_id,))
+    cursor.execute("SELECT description, answer FROM problems WHERE id = ?", (data.problem_id,))
     row = cursor.fetchone()
     conn.close()
 
     if not row:
         return {"error": "문제를 찾을 수 없습니다."}
 
-    correct_answer = row[0]
-    is_correct = data.final_answer.strip() in correct_answer  # 포함 비교 (엄격하게 할 수도 있음)
+    problem_desc, correct_answer = row
+    is_correct, reasoning = judge_final_answer(problem_desc, correct_answer, data.final_answer)
 
     return {
         "is_correct": is_correct,
         "message": "정답입니다! 🎉" if is_correct else "틀렸습니다. 😢",
-        "correct_answer": correct_answer if is_correct else None
+        "correct_answer": correct_answer if is_correct else None,
+        "reasoning": reasoning
     }
+
+@app.post("/hint")
+def get_hint(data: HintRequest):
+    conn = sqlite3.connect("db/ai_turtle.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT description, answer FROM problems WHERE id = ?", (data.problem_id,))
+    row = cursor.fetchone()
+    conn.close()
+
+    if not row:
+        return {"error": "문제를 찾을 수 없습니다."}
+
+    problem_desc, problem_answer = row
+    hint = explain_reasoning(problem_desc, problem_answer, data.question)
+
+    return {"hint": hint}

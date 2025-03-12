@@ -9,7 +9,7 @@ COPY . /app
 
 # 패키지 설치
 RUN pip install --upgrade pip \
-    && pip install fastapi uvicorn pandas transformers torch
+    && pip install fastapi uvicorn pandas transformers torch dotenv openai
 
 # 포트 노출
 EXPOSE 8000

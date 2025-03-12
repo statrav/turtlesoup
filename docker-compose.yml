@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   backend:
@@ -9,7 +9,9 @@ services:
       - "8000:8000"
     volumes:
       - ./backend/db:/app/db
-      - ./data:/app/data  # 문제 jsonl 공유
+      - ./data:/app/data
+    env_file:
+      - ./backend/models/.env
 
   frontend:
     build:
