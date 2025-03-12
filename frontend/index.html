@@ -2,17 +2,18 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🐢 바다거북 스프 게임</title>
     <style>
 
         #intro-section {
-            text-align: center;
-            margin-top: 40px;
+            text-align: left;
+            margin-top: 5px;
             margin-bottom: 40px;
             padding: 30px;
-            background-color: #e8f0ff;
+            background-color: #e9e9e9a7;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.226);
         }
         
         #intro-section p {
@@ -20,6 +21,30 @@
             line-height: 1.7;
             color: #333;
             margin-bottom: 20px;
+        }
+
+        .intro-description {
+            text-align: left;
+        }
+    
+        .intro-button-wrapper {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .intro-button-wrapper button {
+            font-size: 18px;
+            padding: 14px 28px;
+            border-radius: 10px;
+            background-color: #a6e15d7e;
+            color: rgb(0, 0, 0);
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+    
+        .intro-button-wrapper button:hover {
+            background-color: #a6e15d7e;
         }
             
         .modal {
@@ -35,10 +60,10 @@
         
         .modal-content {
           background: white;
-          padding: 30px;
+          padding: 20px;
           border-radius: 10px;
-          width: 600px;
-          max-height: 80vh;
+          width: 90%;
+          max-height: 600px;
           overflow-y: auto;
           box-shadow: 0 0 20px rgba(0,0,0,0.2);
           animation: fadeIn 0.4s ease;
@@ -66,7 +91,7 @@
 
         h1 {
             text-align: center;
-            background-color: #afec60ce;
+            background-color: #4c7418ec;
             color: white;
             padding: 20px;
             margin: 0;
@@ -74,7 +99,7 @@
 
         .container {
             max-width: 900px;
-            margin: 30px auto;
+            margin: 5px auto;
             padding: 20px;
             background-color: white;
             border-radius: 12px;
@@ -103,8 +128,8 @@
         li {
             padding: 10px;
             margin-bottom: 8px;
-            background-color: #a6e15d4e;
-            border-left: 4px solid #a6e15d7e;
+            background-color: #84b34b4e;
+            border-left: 4px solid #6184367e;
             cursor: pointer;
             transition: background-color 0.2s;
         }
@@ -115,6 +140,9 @@
 
         input[type="text"] {
             width: 80%;
+            max-width: 100%;
+            font-size: 16px;
+            box-sizing: border-box;
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ccc;
@@ -122,10 +150,13 @@
         }
 
         button {
+            font-size: 16px;
+            width: auto;
+            min-width: 40%;
             padding: 10px 16px;
             margin-right: 10px;
             background-color: #a6e15d7e;
-            color: white;
+            color: rgb(0, 0, 0);
             border: none;
             border-radius: 6px;
             cursor: pointer;
@@ -155,7 +186,9 @@
     <h1><a href="#" onclick="goHome()" style="color: white; text-decoration: none;">🐢 바다거북 스프 게임</a></h1>
 
     <div class="container" id="intro-section">
-        <h2>🐢 바다거북 스프 게임이란?</h2>
+
+        <div class="intro-description">
+        <h2>바다거북 스프 게임이란?</h2>
         <p>
             바다거북 스프는 <strong>정답을 유추해가는 추리 퀴즈 게임</strong>입니다! 🕵️‍♀️<br><br>
             
@@ -172,10 +205,34 @@
         
             다양한 카테고리와 난이도로 구성되어 있어<br>
             누구나 즐겁게 즐길 수 있습니다 😊<br><br>
-
-            자 그럼 함께 즐겨볼까요?
         </p>
-        <button onclick="startGame()">게임 하러 가기 🎮</button>
+        </div>
+
+        <hr>
+
+        <div id="sample-problem" style="text-align: left; background: #f9f9f9; padding: 20px; border-radius: 10px; border-left: 5px solid #d9d9d9;">
+            <h3>📌 예시 문제</h3>
+            <p><strong>문제:</strong><br>
+            한 남자가, 어느 바닷가 레스토랑에서 바다거북 수프를 주문했으며<br>
+            그 남자는 바다거북 수프를 한 수저 먹고는 주방장을 불렀다.<br>
+            “이거 정말 바다거북 수프 맞나요?”<br>
+            “네, 틀림없는 바다거북 수프 맞습니다.”<br>
+            남자는 계산을 마친 뒤, 집에 돌아가 자살했다.<br>
+            <em>도대체 왜?</em>
+            </p>
+        
+            <details>
+                <summary style="cursor: pointer; color: #48973f; font-weight: bold;">🔍 정답 보기</summary>
+                <p style="margin-top: 10px;">
+                과거 조난된 섬에서 사람고기를 ‘바다거북 수프’로 속여 먹었고,<br>
+                레스토랑에서 진짜 바다거북 수프를 맛본 그는 그 사실을 알아차리고 자살한 것입니다.
+                </p>
+            </details>
+        </div>
+
+        <div class="intro-button-wrapper">
+            <button onclick="startGame()">게임 하러 가기 🎮</button>
+        </div>
     </div>
     
     <div class="container">

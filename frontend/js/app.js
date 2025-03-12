@@ -1,6 +1,7 @@
 let selectedProblemId = null;
 let allProblems = [];  // 전체 문제 저장
 let questionHistory = []; // 질문 히스토리 저장
+let lastestQuestion = null; // 마지막 질문 저장
 
 document.addEventListener("DOMContentLoaded", function () {
     fetchProblems();
@@ -60,7 +61,7 @@ function filterProblems() {
 
 function selectProblem(id, title) {
     selectedProblemId = id;
-    questionHistory = [];  // ✅ 질문 히스토리 초기화!
+    questionHistory = [];  // 질문 히스토리 초기화
 
     fetch(`http://172.16.200.83:8000/problems/${id}`)
         .then(response => response.json())
@@ -69,6 +70,7 @@ function selectProblem(id, title) {
             document.getElementById("modal-problem-description").textContent = problem.description;
             document.getElementById("modal-response").textContent = "";
             document.getElementById("modal-user-question").value = "";
+            document.getElementById("modal-final-answer").value = "";  // 정답 입력창 초기화
             document.getElementById("modal-history").innerHTML = ""; // DOM 초기화도 함께
 
             document.getElementById("problem-modal").style.display = "flex";
@@ -91,6 +93,12 @@ function giveUp() {
 
 function submitFinalAnswer() {
     const userFinalAnswer = document.getElementById("modal-final-answer").value;
+
+    if (!userFinalAnswer) {
+        alert("정답을 입력해주세요.");
+        return;
+    }
+
     if (!userFinalAnswer || !selectedProblemId) return;
 
     fetch("http://172.16.200.83:8000/submit_answer", {
@@ -109,13 +117,24 @@ function submitFinalAnswer() {
             msg += `\n\n정답: ${data.correct_answer}`;
         }
         document.getElementById("modal-response").textContent = msg;
+
+        // 정답 입력창 초기화
+        document.getElementById("modal-final-answer").value = "";
     });
+
 }
 
 
 function submitModalQuestion() {
     const question = document.getElementById("modal-user-question").value;
-    if (!question || !selectedProblemId) return;
+
+    if (!question) {
+        alert("질문을 입력해주세요.");
+        return;
+    }
+    if (!selectedProblemId) return;
+
+    latestQuestion = question; // 질문 저장 (힌트 보기를 위함)
 
     fetch("http://172.16.200.83:8000/ask", {
         method: "POST",
@@ -134,8 +153,12 @@ function submitModalQuestion() {
         // 히스토리 저장
         questionHistory.push({ question, aiResponse });
         renderHistory();
+
+        // 입력창 초기화
+        document.getElementById("modal-user-question").value = "";
     });
 }
+
 
 function renderHistory() {
     const container = document.getElementById("modal-history");
@@ -148,9 +171,10 @@ function renderHistory() {
 }
 
 function showHint() {
-    const question = document.getElementById("modal-user-question").value;
+    const question = document.getElementById("modal-user-question").value || latestQuestion;
+
     if (!question || !selectedProblemId) {
-        alert("먼저 질문을 입력해주세요.");
+        alert("힌트를 보기 위해서는 먼저 질문을 입력하고 제출해야 합니다.");
         return;
     }
 
@@ -168,7 +192,7 @@ function showHint() {
         const hintText = data.hint || "힌트를 가져올 수 없습니다.";
         const hintElem = document.createElement("p");
         hintElem.textContent = "💡 힌트: " + hintText;
-        document.getElementById("modal-history").appendChild(hintElem); // 힌트도 히스토리에 붙이기
+        document.getElementById("modal-history").appendChild(hintElem);
     })
     .catch(err => {
         console.error("힌트 요청 실패", err);

@@ -45,7 +45,8 @@ def explain_reasoning(problem_desc, problem_answer, question):
 정답: {problem_answer}
 질문: {question}
 
-이 질문이 정답 유도에 어떻게 도움이 되는지 설명해 주세요.
+사용자가 질문을 통해 정답을 유추할 수 있도록 도움을 주세요.
+단, 정답을 알려주면 안됩니다. 
 """
     try:
         response = client.chat.completions.create(
